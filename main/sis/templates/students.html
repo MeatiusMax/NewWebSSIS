@@ -1,0 +1,139 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="mb-3">
+  <form class="d-flex" method="POST" action="{{ url_for('addstudent') }}" enctype="multipart/form-data">
+    <button class="btn btn-outline-warning btn-block" type="submit">Add a student</button>
+  </form>
+</div>
+<div class="mb-3">
+  <form class="d-flex" method="GET" action="{{ url_for('search') }}">
+    {{ form.search_by(class="form-select form-select-md me-3") }} 
+    {{ form.this(class="form-control form-control-md me-3", placeholder="Search...") }}
+    <input type="hidden" name="page" value="{{ request.args.get('page', 1) }}">
+    <button class="btn btn-outline-info" type="submit">Search</button>
+  </form>
+</div>
+
+<!-- Student -->
+<div class="row"> 
+  {% if students %}
+    {% for student in students %}
+      <div class="col-md-4">
+        <article class="media content-section">
+          <div class="media-body">
+            <div class="article-metadata">
+              <a class="mr-2" href="#">{{ student[0] }}</a> 
+              <small class="custom-small">{{ student[5] }}</small> 
+              <div class="mb-1 text-end">
+                <a class="btn btn-info btn-sm" href="{{ url_for('change_profile_pic', id_number=student[0]) }}">Edit Picture </a>
+                <a class="btn btn-secondary btn-sm" href="{{ url_for('update', id_number=student[0]) }}">Update</a>
+                <button type="button"  class="btn btn-danger btn-sm" data-bs-toggle="modal" 
+                data-bs-target="#confirmDeleteModal" data-student-id="{{ student[0] }}"data-student-name="{{ student[1] }} {{ student[2] }}">
+                 Delete
+                </button>
+
+              </div>
+            </div>
+            <h2>
+              <a class="article-title" href="#">{{ student[1] + " " + student[2] }}</a>
+            </h2>
+            <p class="article-content">{{ student[3] + " Year " + student[4] }}</p>
+          </div>
+          <div class="text-center mb-2">
+            <img src="{{ student[6] or url_for('static', filename='default-profile.png') }}" 
+                 class="img-thumbnail" style="max-width: 300px; max-height: 400px; object-fit: cover;">
+          </div>
+        </article>
+      </div>
+    {% endfor %}
+  {% else %}
+    <div class="alert alert-warning" role="alert">
+        No students found matching your search criteria.
+    </div>
+  {% endif %}
+</div>
+
+
+<!-- Pagination -->
+<link rel="stylesheet" href="{{ url_for('static', filename='main.css') }}">
+<div class="pagination" style="display: flex; justify-content: center; align-items: center; margin: 20px 0; font-family: system-ui, -apple-system, sans-serif; font-size: 16px; gap: 4px;">
+  {% if total_pages > 1 %}
+
+    {% if current_page > 1 %}
+      <a href="{{ url_for('students', page=current_page-1) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; background-color: #f3f4f6; color: #374151; font-weight: 500;">
+        &larr;
+      </a>
+    {% endif %}
+
+
+    <a href="{{ url_for('students', page=1) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 500; {% if current_page == 1 %}background-color: #2563eb; color: white;{% else %}background-color: #f3f4f6; color: #374151;{% endif %}">1</a>
+
+    {% if current_page - 2 > 2 %}
+      <span class="dots" style="padding: 8px 4px;">•••</span>
+    {% endif %}
+
+    {% for page in range(
+      [2, current_page - 2]|max,
+      [total_pages - 1, current_page + 2]|min + 1
+    ) %}
+      <a href="{{ url_for('students', page=page) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 500; {% if current_page == page %}background-color: #2563eb; color: white;{% else %}background-color: #f3f4f6; color: #374151;{% endif %}">{{ page }}</a>
+    {% endfor %}
+
+  
+    {% if current_page + 2 < total_pages - 1 %}
+      <span class="dots" style="padding: 8px 4px;">•••</span>
+    {% endif %}
+
+
+    {% if total_pages > 1 %}
+      <a href="{{ url_for('students', page=total_pages) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 500; {% if current_page == total_pages %}background-color: #2563eb; color: white;{% else %}background-color: #f3f4f6; color: #374151;{% endif %}">{{ total_pages }}</a>
+    {% endif %}
+
+    {% if current_page < total_pages %}
+      <a href="{{ url_for('students', page=current_page+1) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; background-color: #f3f4f6; color: #374151; font-weight: 500;">
+        &rarr;
+      </a>
+    {% endif %}
+  {% endif %}
+</div>
+
+<!-- Delete Confirmation Modal -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteLabel" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header bg-danger text-white">
+        <h5 class="modal-title" id="confirmDeleteLabel">Confirm Deletion</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        Are you sure you want to delete <strong id="studentName"></strong>?
+        This action cannot be undone.
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+        <a id="confirmDeleteBtn" href="#" class="btn btn-danger">Yes, Delete</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+  var deleteModal = document.getElementById('confirmDeleteModal');
+  var deleteBtn = document.getElementById('confirmDeleteBtn');
+  var studentNameText = document.getElementById('studentName');
+
+  deleteModal.addEventListener('show.bs.modal', function (event) {
+    var triggerButton = event.relatedTarget;
+    var studentId = triggerButton.getAttribute('data-student-id');
+    var studentName = triggerButton.getAttribute('data-student-name');
+
+    // Update modal content
+    studentNameText.textContent = studentName;
+    deleteBtn.href = '/delete/' + studentId;
+  });
+});
+</script>
+
+
+{% endblock content %}
