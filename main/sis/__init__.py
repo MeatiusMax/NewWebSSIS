@@ -4,6 +4,7 @@ from flaskext.mysql import MySQL
 # Initialize Flask application
 application = Flask(__name__)
 
+
 # Configure application
 application.config["SECRET_KEY"] = "12345"
 application.config["MYSQL_DATABASE_HOST"] = "localhost"
@@ -15,5 +16,10 @@ application.config["MYSQL_DATABASE_DB"] = "flask"
 my_sql = MySQL()
 my_sql.init_app(application)
 
-# Import routes after initializing application
-from sis import routes
+# Register blueprints
+from sis.routes import student_bp
+from sis.routes import course_bp
+from sis.routes import college_bp
+application.register_blueprint(student_bp)
+application.register_blueprint(course_bp)
+application.register_blueprint(college_bp)

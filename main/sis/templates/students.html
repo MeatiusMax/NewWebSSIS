@@ -1,12 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
 <div class="mb-3">
-  <form class="d-flex" method="POST" action="{{ url_for('addstudent') }}" enctype="multipart/form-data">
+  <form class="d-flex" method="POST" action="{{ url_for('student_routes.add_student') }}" enctype="multipart/form-data">
     <button class="btn btn-outline-warning btn-block" type="submit">Add a student</button>
   </form>
 </div>
 <div class="mb-3">
-  <form class="d-flex" method="GET" action="{{ url_for('search') }}">
+  <form class="d-flex" method="GET" action="{{ url_for('student_routes.search_students') }}">
     {{ form.search_by(class="form-select form-select-md me-3") }} 
     {{ form.this(class="form-control form-control-md me-3", placeholder="Search...") }}
     <input type="hidden" name="page" value="{{ request.args.get('page', 1) }}">
@@ -25,8 +25,7 @@
               <a class="mr-2" href="#">{{ student[0] }}</a> 
               <small class="custom-small">{{ student[5] }}</small> 
               <div class="mb-1 text-end">
-                <a class="btn btn-info btn-sm" href="{{ url_for('change_profile_pic', id_number=student[0]) }}">Edit Picture </a>
-                <a class="btn btn-secondary btn-sm" href="{{ url_for('update', id_number=student[0]) }}">Update</a>
+                <a class="btn btn-secondary btn-sm" href="{{ url_for('student_routes.update_student', id_number=student[0]) }}">Update</a>
                 <button type="button"  class="btn btn-danger btn-sm" data-bs-toggle="modal" 
                 data-bs-target="#confirmDeleteModal" data-student-id="{{ student[0] }}"data-student-name="{{ student[1] }} {{ student[2] }}">
                  Delete
@@ -60,13 +59,13 @@
   {% if total_pages > 1 %}
 
     {% if current_page > 1 %}
-      <a href="{{ url_for('students', page=current_page-1) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; background-color: #f3f4f6; color: #374151; font-weight: 500;">
+      <a href="{{ url_for('student_routes.students', page=current_page-1) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; background-color: #f3f4f6; color: #374151; font-weight: 500;">
         &larr;
       </a>
     {% endif %}
 
 
-    <a href="{{ url_for('students', page=1) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 500; {% if current_page == 1 %}background-color: #2563eb; color: white;{% else %}background-color: #f3f4f6; color: #374151;{% endif %}">1</a>
+    <a href="{{ url_for('student_routes.students', page=1) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 500; {% if current_page == 1 %}background-color: #2563eb; color: white;{% else %}background-color: #f3f4f6; color: #374151;{% endif %}">1</a>
 
     {% if current_page - 2 > 2 %}
       <span class="dots" style="padding: 8px 4px;">•••</span>
@@ -76,7 +75,7 @@
       [2, current_page - 2]|max,
       [total_pages - 1, current_page + 2]|min + 1
     ) %}
-      <a href="{{ url_for('students', page=page) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 500; {% if current_page == page %}background-color: #2563eb; color: white;{% else %}background-color: #f3f4f6; color: #374151;{% endif %}">{{ page }}</a>
+      <a href="{{ url_for('student_routes.students', page=page) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 500; {% if current_page == page %}background-color: #2563eb; color: white;{% else %}background-color: #f3f4f6; color: #374151;{% endif %}">{{ page }}</a>
     {% endfor %}
 
   
@@ -86,11 +85,11 @@
 
 
     {% if total_pages > 1 %}
-      <a href="{{ url_for('students', page=total_pages) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 500; {% if current_page == total_pages %}background-color: #2563eb; color: white;{% else %}background-color: #f3f4f6; color: #374151;{% endif %}">{{ total_pages }}</a>
+      <a href="{{ url_for('student_routes.students', page=total_pages) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; font-weight: 500; {% if current_page == total_pages %}background-color: #2563eb; color: white;{% else %}background-color: #f3f4f6; color: #374151;{% endif %}">{{ total_pages }}</a>
     {% endif %}
 
     {% if current_page < total_pages %}
-      <a href="{{ url_for('students', page=current_page+1) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; background-color: #f3f4f6; color: #374151; font-weight: 500;">
+      <a href="{{ url_for('student_routes.students', page=current_page+1) }}" style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; background-color: #f3f4f6; color: #374151; font-weight: 500;">
         &rarr;
       </a>
     {% endif %}
