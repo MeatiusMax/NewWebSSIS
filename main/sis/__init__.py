@@ -1,19 +1,29 @@
 from flask import Flask
 from flaskext.mysql import MySQL
+from dotenv import load_dotenv
+import os
+
+load_dotenv()
 
 # Initialize Flask application
 application = Flask(__name__)
 
+
 # Configure application
-application.config["SECRET_KEY"] = "12345"
-application.config["MYSQL_DATABASE_HOST"] = "localhost"
-application.config["MYSQL_DATABASE_USER"] = "root"
-application.config["MYSQL_DATABASE_PASSWORD"] = ""
-application.config["MYSQL_DATABASE_DB"] = "flask"
+application.config["SECRET_KEY"] = os.getenv("SECRET_KEY")
+application.config["MYSQL_DATABASE_HOST"] = os.getenv("MYSQL_DATABASE_HOST")
+application.config["MYSQL_DATABASE_USER"] = os.getenv("MYSQL_DATABASE_USER")
+application.config["MYSQL_DATABASE_PASSWORD"] = os.getenv("MYSQL_DATABASE_PASSWORD")
+application.config["MYSQL_DATABASE_DB"] = os.getenv("MYSQL_DATABASE_DB")
 
 # Initialize MySQL
 my_sql = MySQL()
 my_sql.init_app(application)
 
-# Import routes after initializing application
-from sis import routes
+# Register blueprints
+from sis.routes import student_bp
+from sis.routes import course_bp
+from sis.routes import college_bp
+application.register_blueprint(student_bp)
+application.register_blueprint(course_bp)
+application.register_blueprint(college_bp)
