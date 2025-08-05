@@ -2,11 +2,12 @@ from sis import my_sql
 from math import ceil
 import cloudinary
 import cloudinary.uploader
+import os
 
 cloudinary.config(
-    cloud_name="dljpf0ig2",
-    api_key="539844211487673",
-    api_secret="rxqfOYB-GYHYCXHMfxHAOFuKWos"
+    cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
+    api_key=os.getenv("CLOUDINARY_API_KEY"),
+    api_secret=os.getenv("CLOUDINARY_API_SECRET")
 )
 
 class BaseModel:
