@@ -48,6 +48,8 @@ def update_student(id_number):
     if form.validate_on_submit():
         profile_image_url = student_data[6]
         if form.profile_image.data:
+            if student_data[6]:
+                Student.delete_profile_image(student_data[6])
             profile_image_url = Student.upload_profile_image(form.profile_image.data)
         student = Student(
             id_number=form.id_number.data,

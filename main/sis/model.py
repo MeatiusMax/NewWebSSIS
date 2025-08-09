@@ -3,6 +3,7 @@ from math import ceil
 import cloudinary
 import cloudinary.uploader
 import os
+from urllib.parse import urlparse
 
 cloudinary.config(
     cloud_name=os.getenv("CLOUDINARY_CLOUD_NAME"),
@@ -165,7 +166,7 @@ class Student(BaseModel):
         """Delete a profile image from Cloudinary."""
         if not image_url:
             return
-        public_id = image_url.split("/")[-1].split(".")[0]
+        public_id = os.path.splitext(os.path.basename(urlparse(image_url).path))[0]
         cloudinary.uploader.destroy(f"students/{public_id}")
 
 

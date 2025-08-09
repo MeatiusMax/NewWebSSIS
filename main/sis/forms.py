@@ -49,10 +49,3 @@ class CollegeForm(FlaskForm):
     college_code = StringField("College code", validators=[DataRequired()])
     college_name = StringField("College name", validators=[DataRequired()])
     add = SubmitField("Add/Update")
-
-class CollegeSearchForm(FlaskForm):
-    search_by = SelectField("Search by", 
-                            choices=["College code", 
-                                     "College name"])
-    this = StringField("This", validators=[DataRequired()])
-    search = SubmitField("Search")
