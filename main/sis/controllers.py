@@ -22,7 +22,6 @@ def add_student():
     form = StudentForm()
     form.course.choices = Course.get_course_codes()
     if request.method == "POST" and form.validate_on_submit():
-        profile_image_url = Student.upload_profile_image(form.profile_image.data)
         student = Student(
             id_number=form.id_number.data,
             first_name=form.first_name.data,
@@ -30,11 +29,11 @@ def add_student():
             course=form.course.data,
             year_level=form.year_level.data,
             gender=form.gender.data,
-            profile_image=profile_image_url
+            profile_image=None
         )
         student.create()
         flash(f"Student {form.id_number.data} has been added successfully.", "success")
-        return redirect(url_for("student_routes.students"))
+        return redirect (url_for("student_routes.change_profile_pic", id_number=form.id_number.data))
     return render_template("addstudent.html", title="Add a Student", legend="Add a Student", form=form)
 
 
@@ -105,7 +104,6 @@ def change_profile_pic(id_number):
         profile_image = request.files.get("profile_image")
         if profile_image:
             image_url = Student.upload_profile_image(profile_image)
-            student_obj = Student(id_number=id_number, profile_image=image_url)
             connection, cursor = Student.get_db_connection()
             cursor.execute(
                 "UPDATE Student SET profile_image = %s WHERE id_number = %s",
