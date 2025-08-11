@@ -116,7 +116,7 @@ def change_profile_pic(id_number):
             flash(f"Profile picture for student {id_number} updated successfully.", "success")
         else:
             flash("No image selected for upload.", "warning")
-        return redirect(url_for("student_routes.students"))
+        return redirect( url_for('student_routes.update_student', id_number=student[0]) )
     return render_template(
         "change_profile_pic.html", title="Change Profile Picture", student=student
     )
