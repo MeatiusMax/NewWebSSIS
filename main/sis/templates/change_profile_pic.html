@@ -13,8 +13,8 @@
             <input type="file" name="profile_image" id="profile_image" class="form-control" accept="image/*">
         </div>
         <button type="submit" class="btn btn-primary mt-3">Update Profile Picture</button>
-        <a href="{{ url_for('student_routes.update_student', id_number=student[0]) }}" class="btn btn-secondary mt-3">Back to Updating</a>
-        <a href="{{ url_for('student_routes.students') }}" class="btn btn-secondary mt-3">Back to students List</a>
+        <a href="{{ url_for('student_routes.update_student', id_number=student[0]) }}" class="btn btn-secondary mt-3">Back</a>
+        <a href="{{ url_for('student_routes.students') }}" class="btn btn-secondary mt-3">Go to students List</a>
     </form>
 </div>
 {% endblock content %}
