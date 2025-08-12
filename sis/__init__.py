@@ -25,6 +25,7 @@ my_sql.init_app(application)
 from sis.routes import student_bp
 from sis.routes import course_bp
 from sis.routes import college_bp
+
 application.register_blueprint(student_bp)
 application.register_blueprint(course_bp)
 application.register_blueprint(college_bp)
