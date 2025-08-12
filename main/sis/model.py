@@ -47,9 +47,23 @@ class Student(BaseModel):
         connection, cursor = cls.get_db_connection()
         
         offset = (page - 1) * per_page
-        cursor.execute("SELECT * FROM Student LIMIT %s OFFSET %s", (per_page, offset))
+
+        cursor.execute("""
+            SELECT 
+                s.id_number, 
+                s.first_name, 
+                s.last_name, 
+                CONCAT(s.course, ' - ', c.course_name) AS course_full,
+                s.year_level, 
+                s.gender, 
+                s.profile_image
+            FROM Student s
+            JOIN Course c ON s.course = c.course_code
+            ORDER BY s.last_name
+            LIMIT %s OFFSET %s
+        """, (per_page, offset))
         students = cursor.fetchall()
-        
+
         cursor.execute("SELECT COUNT(*) FROM Student")
         result = cursor.fetchone()
         total_students = result[0] if result else 0
@@ -59,6 +73,7 @@ class Student(BaseModel):
         total_pages = ceil(total_students / per_page)
         
         return students, total_students, total_pages
+
     
     @classmethod
     def get_by_id(cls, id_number):
