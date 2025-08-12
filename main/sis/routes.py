@@ -1,6 +1,6 @@
 from flask import Blueprint
 from sis.controllers import (
-    students, add_student, update_student, delete_student, search_students,change_profile_pic,
+    students, add_student, update_student, delete_student, search_students,change_profile_pic, student_rows,
     courses, add_course, update_course, delete_course, search_courses,
     colleges, add_college, update_college, delete_college, search_colleges
 )
@@ -8,6 +8,7 @@ from sis.controllers import (
 student_bp = Blueprint('student_routes', __name__)
 
 student_bp.route("/students", methods=["POST", "GET"])(students)
+student_bp.route("/student_rows", methods=["POST", "GET"])(student_rows)
 student_bp.route("/", methods=["POST", "GET"])(students)
 student_bp.route("/addstudent", methods=["POST", "GET"])(add_student)
 student_bp.route("/update/<id_number>", methods=["POST", "GET"])(update_student)

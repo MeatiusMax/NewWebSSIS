@@ -2,4 +2,3 @@ __pycache__
 .env
 .venv
 sis.sql
-Pipfile.lock

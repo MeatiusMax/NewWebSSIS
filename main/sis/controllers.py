@@ -18,6 +18,20 @@ def students():
         form=form
     )
 
+def student_rows():
+    page = request.args.get('page', 1, type=int)
+    students_data = Student.get_all(page=page)
+    form = SearchForm()
+    return render_template(
+        "studentrow.html",
+        title="Students",
+        students=students_data[0],
+        total_students=students_data[1],
+        total_pages=students_data[2],
+        current_page=page,
+        form=form
+    )
+
 
 def add_student():
     form = StudentForm()
