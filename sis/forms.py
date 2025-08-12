@@ -1,11 +1,14 @@
 from flask_wtf import FlaskForm
 from wtforms import StringField, SubmitField, SelectField,FileField
-from wtforms.validators import DataRequired, Length
+from wtforms.validators import DataRequired, Length,Regexp
 from flask_wtf.file import FileAllowed, FileField
 
 class StudentForm(FlaskForm):
     id_number = StringField("ID Number",
-                            validators=[DataRequired(), Length(max=9)])
+                            validators=[DataRequired(), 
+                                        Length(max=9),
+                                        Regexp(
+                                        r'^\d{4}-\d{4}$')])
     first_name = StringField("First name", validators=[DataRequired()])
     last_name = StringField("Last name", validators=[DataRequired()])
     course = SelectField("Course", choices=[])
