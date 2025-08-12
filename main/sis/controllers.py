@@ -94,15 +94,26 @@ def search_students():
                            form=form, current_page=current_page, total_pages=students_data[2],
                            search_value=search_value, search_by=search_by)
 
+ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"}
+MAX_FILE_MB=2
+
+def allowed_file(filename):
+    '.' in filename and \
+           filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
+    return redirect ('student_routes.change_profile_pic')
+
 
 def change_profile_pic(id_number):
     student = Student.get_by_id(id_number)
-    if not student:
-        flash("Student not found!", "danger")
-        return redirect(url_for("student_routes.students"))
     if request.method == "POST":
         profile_image = request.files.get("profile_image")
-        if profile_image:
+        if profile_image and allowed_file(profile_image.filename):
+            profile_image.stream.seek(0, 2)
+            file_size = profile_image.stream.tell()
+            profile_image.stream.seek(0) 
+            if file_size > MAX_FILE_MB * 1024 * 1024:
+                flash(f"File must be smaller than {MAX_FILE_MB} MB.", "danger")
+                return redirect('student_routes.change_profile_pic')
             image_url = Student.upload_profile_image(profile_image)
             connection, cursor = Student.get_db_connection()
             cursor.execute(
@@ -111,10 +122,15 @@ def change_profile_pic(id_number):
             )
             connection.commit()
             Student.close_connection(connection, cursor)
-            flash(f"Profile picture for student {id_number} updated successfully.", "success")
+            flash(f"Profile picture updated successfully.", "success")
         else:
-            flash("No image selected for upload.", "warning")
-        return redirect( url_for('student_routes.update_student', id_number=student[0]) )
+            flash("Invalid file type. Only JPG, JPEG, and PNG are allowed.", "danger")
+
+        add_update = request.args.get("add","update")
+        if add_update == "update":
+            return redirect(url_for('student_routes.update_student', id_number = id_number))
+        else:
+            return redirect( url_for('student_routes.students'))    
     return render_template(
         "change_profile_pic.html", title="Change Profile Picture", student=student
     )
