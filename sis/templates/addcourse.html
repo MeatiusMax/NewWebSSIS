@@ -7,11 +7,11 @@
         <legend class="border-bottom mb-4">{{ legend }}</legend>
         <div class="form-group">
           {{ form.course_code.label(class="form-control-label") }} 
-          {{ form.course_code(class="form-control form-control-md") }}
+          {{ form.course_code(class="form-control form-control-md",pattern="[A-z]*") }}
         </div>
         <div class="form-group">
           {{ form.course_name.label(class="form-control-label") }} 
-          {{ form.course_name(class="form-control form-control-md") }}
+          {{ form.course_name(class="form-control form-control-md",pattern="[A-z]*") }}
         </div>
         <div class="form-group">
           {{ form.college.label(class="form-control-label") }} 
@@ -24,4 +24,23 @@
     </form>
   </div>
   <div class="border-top pt-3"></div>
+
+  <script>
+document.addEventListener("DOMContentLoaded", function() {
+  const codeField = document.querySelector('input[name="course_code"]');
+  const nameField = document.querySelector('input[name="course_name"]');
+
+  if (codeField) {
+    codeField.addEventListener("input", function(e) {
+      e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+    });
+  }
+
+  if (nameField) {
+    nameField.addEventListener("input", function(e) {
+      e.target.value = e.target.value.toUpperCase().replace(/[^A-Z ]/g, '');
+    });
+  }
+});
+</script>
 {% endblock content %}

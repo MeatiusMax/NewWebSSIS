@@ -7,10 +7,10 @@
         <legend class="border-bottom mb-4">{{ legend }}</legend>
         <div class="form-group">
           {{ form.college_code.label(class="form-control-label") }} 
-          {{ form.college_code(class="form-control form-control-md") }}
+          {{ form.college_code(class="form-control form-control-md",pattern="[A-Z]+$") }}
         <div class="form-group">
           {{ form.college_name.label(class="form-control-label") }} 
-          {{ form.college_name(class="form-control form-control-md") }}
+          {{ form.college_name(class="form-control form-control-md",pattern="[A-Z]+$") }}
         </div>
       </fieldset>
       <div class="form-group">
@@ -19,6 +19,25 @@
     </form>
   </div>
   <div class="border-top pt-3"></div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  const codeField = document.querySelector('input[name="college_code"]');
+  const nameField = document.querySelector('input[name="college_name"]');
+
+  if (codeField) {
+    codeField.addEventListener("input", function(e) {
+      e.target.value = e.target.value.toUpperCase().replace(/[^A-Z]/g, '');
+    });
+  }
+
+  if (nameField) {
+    nameField.addEventListener("input", function(e) {
+      e.target.value = e.target.value.toUpperCase().replace(/[^A-Z ]/g, '');
+    });
+  }
+});
+</script>
 
 
 {% endblock content %}
