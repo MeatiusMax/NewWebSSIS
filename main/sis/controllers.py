@@ -2,6 +2,7 @@ from flask import render_template, url_for, flash, redirect, request
 from sis.forms import StudentForm, SearchForm, CourseForm, CourseSearchForm, CollegeForm, CollegeSearchForm
 from sis.model import Student, Course, College
 
+#---------------------------------------------STUDENTS--------------------------------------------#
 
 def students():
     page = request.args.get('page', 1, type=int)
@@ -94,6 +95,10 @@ def search_students():
                            form=form, current_page=current_page, total_pages=students_data[2],
                            search_value=search_value, search_by=search_by)
 
+
+
+#-----------------------------Changing Profile-------------------------------------------------#
+
 ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"}
 MAX_FILE_MB=2
 
@@ -101,7 +106,6 @@ def allowed_file(filename):
     '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
     return redirect ('student_routes.change_profile_pic')
-
 
 def change_profile_pic(id_number):
     student = Student.get_by_id(id_number)
@@ -134,6 +138,7 @@ def change_profile_pic(id_number):
     return render_template(
         "change_profile_pic.html", title="Change Profile Picture", student=student
     )
+#------------------------------------------------COURSES------------------------------------------------------#
 
 def courses():
     courses_list = Course.get_all()
@@ -195,6 +200,12 @@ def search_courses():
     else:
         courses_list = []
     return render_template("courses.html", title="Courses", courses=courses_list, form=form)
+
+
+
+
+#-------------------------------------------COLLEGES--------------------------------------#
+
 
 def colleges():
     colleges_list = College.get_all()
