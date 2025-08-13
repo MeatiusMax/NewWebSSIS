@@ -37,6 +37,12 @@ def add_student():
     form = StudentForm()
     form.course.choices = Course.get_course_codes()
     if request.method == "POST" and form.validate_on_submit():
+        existing_student = Student.get_by_id(form.id_number.data)
+        if existing_student:
+            flash(f"Student with ID {form.id_number.data} already exists.", "danger")
+            return render_template(
+                "addstudent.html", title="Add a Student", legend="Add a Student", form=form
+            )
         student = Student(
             id_number=form.id_number.data,
             first_name=form.first_name.data,

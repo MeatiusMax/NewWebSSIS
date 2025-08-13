@@ -153,14 +153,13 @@ class Student(BaseModel):
         """Delete a student and their profile image from Cloudinary and the database."""
         connection, cursor = cls.get_db_connection()
         try:
-        # Step 1: Get the profile image URL before deleting the student
             cursor.execute("SELECT profile_image FROM Student WHERE id_number = %s", (id_number,))
             result = cursor.fetchone()
             if result and result[0]:
                 image_url = result[0]
-                cls.delete_profile_image(image_url)  # Delete from Cloudinary
+                cls.delete_profile_image(image_url) 
 
-        # Step 2: Delete the student from the database
+
             cursor.execute("DELETE FROM Student WHERE id_number = %s", (id_number,))
             connection.commit()
         finally:
