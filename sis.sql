@@ -10,7 +10,7 @@ CREATE TABLE `Course` (
     `course_code` VARCHAR(10) PRIMARY KEY,
     `course_name` VARCHAR(50) NOT NULL,
     `college` VARCHAR(10),
-    FOREIGN KEY (`college`) REFERENCES `College` (`college_code`) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (`college`) REFERENCES `College` (`college_code`) ON UPDATE CASCADE ON DELETE set NULL
 );
 
 CREATE TABLE `Student` (

@@ -123,9 +123,8 @@ ALLOWED_EXTENSIONS = {"jpg", "jpeg", "png"}
 MAX_FILE_MB=2
 
 def allowed_file(filename):
-    '.' in filename and \
+    return '.' in filename and \
            filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
-    return redirect ('student_routes.change_profile_pic')
 
 def change_profile_pic(id_number):
     student = Student.get_by_id(id_number)
@@ -170,6 +169,13 @@ def add_course():
     form = CourseForm()
     form.college.choices = College.get_college_codes()
     if request.method == "POST" and form.validate_on_submit():
+        existing_student = Course.get_by_code(form.course_code.data)
+        if existing_student:
+            flash(f"Course already exists.", "danger")
+            return render_template(
+                "addcourse.html", title="Add a course", legend="Add a course", form=form
+            )
+        
         course = Course(
             course_code=form.course_code.data,
             course_name=form.course_name.data,
@@ -236,6 +242,12 @@ def colleges():
 def add_college():
     form = CollegeForm()
     if request.method == "POST" and form.validate_on_submit():
+        existing_student = College.get_by_code(form.college_code.data)
+        if existing_student:
+            flash(f"College already exists.", "danger")
+            return render_template(
+                "addcollege.html", title="Add a College", legend="Add a College", form=form
+            )
         college = College(
             college_code=form.college_code.data,
             college_name=form.college_name.data
