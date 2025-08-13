@@ -9,7 +9,7 @@ CREATE TABLE `College` (
 CREATE TABLE `Course` (
     `course_code` VARCHAR(10) PRIMARY KEY,
     `course_name` VARCHAR(50) NOT NULL,
-    `college` VARCHAR(10) NOT NULL,
+    `college` VARCHAR(10),
     FOREIGN KEY (`college`) REFERENCES `College` (`college_code`) ON UPDATE CASCADE ON DELETE CASCADE
 );
 
@@ -17,10 +17,10 @@ CREATE TABLE `Student` (
     `id_number` VARCHAR(9) PRIMARY KEY,
     `first_name` VARCHAR(50) NOT NULL,
     `last_name` VARCHAR(50) NOT NULL,
-    `course` VARCHAR(10) NOT NULL,
+    `course` VARCHAR(10),
     `year_level` VARCHAR(10) NOT NULL,
     `gender` VARCHAR(25) NOT NULL,
     `profile_image` VARCHAR(255),
     
-    FOREIGN KEY (`course`) REFERENCES `Course` (`course_code`) ON UPDATE CASCADE ON DELETE CASCADE
+    FOREIGN KEY (`course`) REFERENCES `Course` (`course_code`) ON UPDATE CASCADE ON DELETE set NULL
 );
