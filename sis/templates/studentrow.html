@@ -41,11 +41,12 @@
             <h2>
               <a class="article-title" href="#">{{ student[1] + " " + student[2] }}</a>
             </h2>
-            <p class="article-content">{{ student[3] + " Year " + student[4] }}</p>
+            <p class="article-content">{{ student[3]}}</p>
+            <p class="article-content">{{" Year " + student[4] }}</p>
           </div>
           <div class="text-center mb-2">
             <img src="{{ student[6] or url_for('static', filename='default-profile.png') }}" 
-                 class="img-thumbnail" style="width: 300px; height: 400px; object-fit: cover;">
+                 class="img-thumbnail" style="width: 200px; height: 200px; object-fit: cover;">
           </div>
         </article>
       </div>

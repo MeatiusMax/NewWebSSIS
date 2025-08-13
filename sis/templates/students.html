@@ -5,10 +5,10 @@
         <button class="btn btn-outline-warning" type="submit">Add a student</button>
     </form>
 
-    <a href="{{ url_for('student_routes.student_rows') }}" 
+    <!--<a href="{{ url_for('student_routes.student_rows') }}" 
        style="min-width: 40px; padding: 8px 12px; border-radius: 8px; text-align: center; text-decoration: none; background-color: #f3f4f6; color: #374151; font-weight: 500;">
        Switch View
-    </a>
+    </a>-->
 </div>
 
 <div class="mb-3">
@@ -31,7 +31,7 @@
       <th scope="col">Course</th>
       <th scope="col">Year</th> 
       <th scope="col">Gender</th>
-      <th scope="col" style="width: 130px;">Actions</th>
+      <th scope="col" style="width: 130px;"></th>
     </tr>
   </thead>
   <tbody>
@@ -47,14 +47,16 @@
       <td>{{ student[4] }}</td>
       <td>{{ student[5] }}</td>
       <td>
+        <div class="d-flex gap-1">
         <a href="{{ url_for('student_routes.update_student', id_number=student[0]) }}" class="btn btn-secondary btn-sm mb-1 w-100">Update</a>
-        <button type="button" class="btn btn-danger btn-sm w-100" 
+        <button type="button" class="btn btn-danger btn-secondary btn-sm mb-1 w-100"
                 data-bs-toggle="modal" 
                 data-bs-target="#confirmDeleteModal"
                 data-student-id="{{ student[0] }}"
                 data-student-name="{{ student[1] }} {{ student[2] }}">
           Delete
         </button>
+        </div>
       </td>
     </tr>
     {% endfor %}
