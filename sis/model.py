@@ -58,7 +58,7 @@ class Student(BaseModel):
                 s.gender, 
                 s.profile_image
             FROM Student s
-            JOIN Course c ON s.course = c.course_code
+            LEFT JOIN Course c ON s.course = c.course_code
             ORDER BY s.last_name
             LIMIT %s OFFSET %s
         """, (per_page, offset))
@@ -115,7 +115,7 @@ class Student(BaseModel):
                 s.gender, 
                 s.profile_image
             FROM Student s
-            JOIN Course c ON s.course = c.course_code
+            LEFT JOIN Course c ON s.course = c.course_code
             WHERE {field} LIKE %s
             ORDER BY s.last_name
             LIMIT %s OFFSET %s
@@ -125,7 +125,7 @@ class Student(BaseModel):
         cursor.execute(f"""
         SELECT COUNT(*) 
         FROM Student s
-        JOIN Course c ON s.course = c.course_code
+        LEFT JOIN Course c ON s.course = c.course_code
         WHERE {field} LIKE %s
     """, (f"%{search_value}%",))
         total_students = cursor.fetchone()[0]

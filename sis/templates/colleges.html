@@ -15,23 +15,34 @@
 </div>
 
 {% if colleges %}
-  <div class="list-group">
+  <div class="table-responsive">
+    <table class="table table-striped table-hover align-middle content-section">
+      <thead class="table-dark">
+        <tr>
+          <th scope="col">College Code</th>
+          <th scope="col">College Name</th>
+          <th scope="col" class="text-end"></th>
+        </tr>
+      </thead>
+      <tbody>
     {% for college in colleges %}
-      <div class="list-group-item d-flex justify-content-between align-items-center">
-        <div>
-          <strong>{{ college[0] }}</strong> — {{ college[1] }}
-        </div>
-        <div>
-          <a class="btn btn-secondary btn-sm me-2" href="{{ url_for('college_routes.update_college', college_code=college[0]) }}">Update</a>
-          <button type="button" class="btn btn-danger btn-sm" data-bs-toggle="modal"
-            data-bs-target="#confirmDeleteModal"
-            data-college-code="{{ college[0] }}"
-            data-college-name="{{ college[1] }}">
-            Delete
-          </button>
-        </div>
-      </div>
-    {% endfor %}
+      <tr>
+            <td><strong>{{ college[0] }}</strong></td>
+            <td>{{ college[1] }}</td>
+            <td class="text-end">
+              <a class="btn btn-secondary btn-sm me-2" href="{{ url_for('college_routes.update_college', college_code=college[0]) }}">Update</a>
+              <button type="button" class="btn btn-danger btn-sm"
+                data-bs-toggle="modal"
+                data-bs-target="#confirmDeleteModal"
+                data-college-code="{{ college[0] }}"
+                data-college-name="{{ college[1] }}">
+                Delete
+              </button>
+            </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
   </div>
 {% else %}
   <div class="alert alert-warning" role="alert">
