@@ -105,7 +105,21 @@ class Student(BaseModel):
         if not field:
             return [], 0, 0
             
-        cursor.execute(f"SELECT * FROM Student WHERE {field} LIKE %s LIMIT %s OFFSET %s", 
+        cursor.execute(f"""
+            SELECT 
+            s.id_number, 
+            s.first_name, 
+            s.last_name, 
+            CONCAT(s.course, ' - ', c.course_name) AS course_full,
+            s.year_level, 
+            s.gender, 
+            s.profile_image
+        FROM Student s
+        JOIN Course c ON s.course = c.course_code
+        WHERE {field} LIKE %s
+        ORDER BY s.last_name
+        LIMIT %s OFFSET %s
+        """,
                       (f'%{search_value}%', per_page, offset))
         students = cursor.fetchall()
         
